@@ -1,16 +1,17 @@
 package office
 
 import (
-	"fmt"
+	"RecoPost/parcel"
 )
 
 type Office struct {
-	OfficeName string
-	MaxPackWt  int
-	MinPackWt  int
-	// TODO: list? of packages(uid, Wt)
+	officeName  string
+	maxParcelWt int
+	minParcelWt int
+	parcels     []parcel.Parcel
 }
 
-func (e Employee) LeavesRemaining() {
-	fmt.Printf("%s %s has %d leaves remaining\n", e.FirstName, e.LastName, (e.TotalLeaves - e.LeavesTaken))
+func New(officeName string, maxParcelWt int, minParcelWt int, parcellist []parcel.Parcel) Office {
+	o := Office{officeName, maxParcelWt, minParcelWt, parcellist}
+	return o
 }
