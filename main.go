@@ -3,38 +3,62 @@ package main
 import (
 	"RecoPost/city"
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 )
 
-func main() {
-	var cities_list []city.City
-	scanner := bufio.NewScanner(os.Stdin)
-
-	fmt.Print("Num of cities: ")
-	scanner.Scan() // Scans a line from Stdin(Console)
-
+func parse_num_cities(scanner *bufio.Scanner) (int, error) {
+	scanner.Scan()
 	text := scanner.Text()
-	if len(text) == 0 {
-		fmt.Println("Error: empty input")
+	if len(text) != 1 {
+		return 0, errors.New("error: expected number of cities")
 	}
-	fmt.Println(text, "cities") // Debug
 
 	num_cities, err := strconv.Atoi(text)
 	if err != nil {
-		fmt.Println(err)
+		return 0, err
+	} else if num_cities < 0 {
+		return 0, errors.New("error: number of cities should be non-negative int")
 	}
+
+	return num_cities, nil
+}
+
+func create_cities(scanner *bufio.Scanner, num_cities int) ([]city.City, error) {
+	var cities_list []city.City
+
 	for i := 0; i < num_cities; i++ {
 		c, err := city.New(scanner)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(-1)
+			return nil, err
 		}
 		cities_list = append(cities_list, *c)
 	}
-	if scanner.Err() != nil {
-		fmt.Print("TODO: Handle error")
+
+	return cities_list, nil
+}
+
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+
+	num_cities, err := parse_num_cities(scanner)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
 	}
+
+	cities_list, err := create_cities(scanner, num_cities)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
+	if scanner.Err() != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
 	fmt.Println("DONE", cities_list, "is the city list") // Debug
 }
