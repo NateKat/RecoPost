@@ -26,21 +26,15 @@ func main() {
 		fmt.Println(err)
 	}
 	for i := 0; i < num_cities; i++ {
-		fmt.Print("City name: ")
-		scanner.Scan() // Scans a line from Stdin(Console)
-
-		text := scanner.Text()
-		if len(text) == 0 {
-			fmt.Println("Error: empty input")
+		c, err := city.New(scanner)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
 		}
-		fmt.Println(text, "cities") // Debug
-		c := city.New(text, scanner)
-		cities_list = append(cities_list, c)
+		cities_list = append(cities_list, *c)
 	}
 	if scanner.Err() != nil {
 		fmt.Print("TODO: Handle error")
-
 	}
 	fmt.Println("DONE", cities_list, "is the city list") // Debug
-
 }
