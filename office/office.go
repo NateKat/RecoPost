@@ -79,3 +79,7 @@ func New(scanner *bufio.Scanner, office_number int) (*Office, error) {
 	o := Office{office_number, o_params[1], o_params[2], parcels_list}
 	return &o, nil
 }
+
+func (o Office) Tot_parcels() int {
+	return len(o.parcels)
+}

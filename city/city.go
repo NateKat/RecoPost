@@ -51,6 +51,7 @@ func create_offices(scanner *bufio.Scanner, num_offices int) ([]office.Office, e
 }
 
 func New(scanner *bufio.Scanner) (*City, error) {
+	var tot = 0
 
 	cityName, num_offices, err := parse_city_params(scanner)
 	if err != nil {
@@ -62,8 +63,10 @@ func New(scanner *bufio.Scanner) (*City, error) {
 		return nil, err
 	}
 
-	c := City{cityName, 0, offices_list}
+	for _, o := range offices_list {
+		tot += o.Tot_parcels()
+	}
+
+	c := City{cityName, tot, offices_list}
 	return &c, nil
 }
-
-// totParcels int, offices []office.Office
