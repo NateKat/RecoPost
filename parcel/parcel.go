@@ -30,3 +30,7 @@ func New(scanner *bufio.Scanner) (*Parcel, error) {
 	p := Parcel{fields[0], wt}
 	return &p, nil
 }
+
+func (p Parcel) Parcel_wt() int {
+	return p.weight
+}

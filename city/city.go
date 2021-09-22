@@ -70,3 +70,9 @@ func New(scanner *bufio.Scanner) (*City, error) {
 	c := City{cityName, tot, offices_list}
 	return &c, nil
 }
+
+func Move_parcels(c1, c2 City, o1, o2 int) {
+	tot_send, tot_recv := c1.offices[o1].Send_to_office(c2.offices[o2])
+	c1.totParcels -= tot_send
+	c2.totParcels += tot_recv
+}
