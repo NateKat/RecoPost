@@ -1,10 +1,10 @@
 package city
 
 import (
-	"fmt"
-	"bufio"
-	"strconv"
 	"RecoPost/office"
+	"bufio"
+	"fmt"
+	"strconv"
 )
 
 type City struct {
@@ -29,8 +29,11 @@ func New(cityName string, scanner *bufio.Scanner) City {
 		fmt.Println(err)
 	}
 	for i := 0; i < num_offices; i++ {
-		o := office.New(scanner)
-		offices_list = append(offices_list, o)
+		o, err := office.New(scanner, i)
+		if err != nil {
+			fmt.Println(err)
+		}
+		offices_list = append(offices_list, *o)
 	}
 	c := City{cityName, 0, offices_list}
 	return c
