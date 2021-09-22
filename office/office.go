@@ -1,10 +1,10 @@
 package office
 
 import (
-	"fmt"
-	"bufio"
-	"strconv"
 	"RecoPost/parcel"
+	"bufio"
+	"fmt"
+	"strconv"
 )
 
 type Office struct {
@@ -30,17 +30,11 @@ func New(scanner *bufio.Scanner) Office {
 		fmt.Println(err)
 	}
 	for i := 0; i < num_parcels; i++ {
-		fmt.Print("each parcel name and wt: ")
-		scanner.Scan() // Scans a line from Stdin(Console)
-
-		text := scanner.Text()
-		if len(text) == 0 {
-			fmt.Println("Error: empty input")
+		p, err := parcel.New(scanner)
+		if err != nil {
+			fmt.Println(err)
 		}
-		fmt.Println(text, "specific parcel:") // Debug
-		p := parcel.New(text, 0)
-		parcels_list = append(parcels_list, p)
-
+		parcels_list = append(parcels_list, *p)
 	}
 
 	o := Office{"0", 0, 0, parcels_list}
