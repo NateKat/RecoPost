@@ -88,3 +88,17 @@ func Max_parcels_name(cities_list []City) string {
 
 	return max_c.cityName
 }
+
+func Create_cities(scanner *bufio.Scanner, num_cities int) ([]City, error) {
+	var cities_list []City
+
+	for i := 0; i < num_cities; i++ {
+		c, err := New(scanner)
+		if err != nil {
+			return nil, err
+		}
+		cities_list = append(cities_list, *c)
+	}
+
+	return cities_list, nil
+}

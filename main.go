@@ -28,20 +28,6 @@ func parse_single_number(scanner *bufio.Scanner) (int, error) {
 	return number, nil
 }
 
-func create_cities(scanner *bufio.Scanner, num_cities int) ([]city.City, error) {
-	var cities_list []city.City
-
-	for i := 0; i < num_cities; i++ {
-		c, err := city.New(scanner)
-		if err != nil {
-			return nil, err
-		}
-		cities_list = append(cities_list, *c)
-	}
-
-	return cities_list, nil
-}
-
 func handle_cities_input(scanner *bufio.Scanner) ([]city.City, error) {
 	var parcel_m = parcel.Parcel_m // map[string]bool
 
@@ -50,7 +36,7 @@ func handle_cities_input(scanner *bufio.Scanner) ([]city.City, error) {
 		return nil, err
 	}
 
-	cities_list, err := create_cities(scanner, num_cities)
+	cities_list, err := city.Create_cities(scanner, num_cities)
 	if err != nil {
 		return nil, err
 	}
