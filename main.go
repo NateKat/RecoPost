@@ -61,7 +61,7 @@ func actions_input_and_exec(scanner *bufio.Scanner, cities_list []city.City) err
 	fmt.Println("City list:", cities_list) // Debug
 	fmt.Println("Actions:", action_list)   // Debug
 
-	return nil
+	return action.Execute_actions(action_list, cities_list)
 }
 
 func main() {

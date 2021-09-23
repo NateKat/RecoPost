@@ -1,6 +1,7 @@
 package action
 
 import (
+	"RecoPost/city"
 	"bufio"
 	"errors"
 	"strconv"
@@ -23,7 +24,7 @@ func verify_int(str string) error {
 	return nil
 }
 
-func op_one(fields []string) (int, string, error) {
+func parse_op_one(fields []string) (int, string, error) {
 	if len(fields) != 2 {
 		return 0, "", errors.New("error: op 1 should have 1 param")
 	}
@@ -31,7 +32,7 @@ func op_one(fields []string) (int, string, error) {
 	return 1, fields[1], nil
 }
 
-func op_two(fields []string) (int, string, error) {
+func parse_op_two(fields []string) (int, string, error) {
 	if len(fields) != 5 {
 		return 0, "", errors.New("error: op 2 should have 4 params")
 	}
@@ -47,7 +48,7 @@ func op_two(fields []string) (int, string, error) {
 	return 2, strings.Join(fields, " ")[1:], nil
 }
 
-func op_three(fields []string) (int, string, error) {
+func parse_op_three(fields []string) (int, string, error) {
 	if len(fields) != 1 {
 		return 0, "", errors.New("error: op 3 should have 0 params")
 	}
@@ -65,11 +66,11 @@ func parse_action_params(scanner *bufio.Scanner) (int, string, error) {
 
 	switch fields[0] {
 	case "1":
-		return op_one(fields)
+		return parse_op_one(fields)
 	case "2":
-		return op_two(fields)
+		return parse_op_two(fields)
 	case "3":
-		return op_three(fields)
+		return parse_op_three(fields)
 	default:
 		return 0, "", errors.New("error: opcode doesn't exists")
 	}
@@ -97,4 +98,34 @@ func Create_actions(scanner *bufio.Scanner, num_actions int) ([]Action, error) {
 	}
 
 	return action_list, nil
+}
+
+func (action *Action) op_one() error {
+	return nil
+}
+
+func (action *Action) op_two() error {
+	return nil
+}
+
+func (action *Action) op_three() error {
+	//fmt.Println("Town with the most number of packages is ", city.Max_parcels_name())
+	return nil
+}
+
+func Execute_actions(action_list []Action, cities_list []city.City) error {
+	for _, a := range action_list {
+		switch a.op {
+		case 1:
+			a.op_one()
+		case 2:
+			a.op_two()
+		case 3:
+			a.op_three()
+		default:
+			return errors.New("error: action opcode doesn't exists")
+		}
+	}
+
+	return nil
 }
