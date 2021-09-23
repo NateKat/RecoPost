@@ -42,33 +42,52 @@ func create_cities(scanner *bufio.Scanner, num_cities int) ([]city.City, error) 
 	return cities_list, nil
 }
 
-func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+func handle_cities_input(scanner *bufio.Scanner) ([]city.City, error) {
 	var parcel_m = parcel.Parcel_m // map[string]bool
 
 	num_cities, err := parse_single_number(scanner)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		return nil, err
 	}
 
 	cities_list, err := create_cities(scanner, num_cities)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		return nil, err
 	}
 
 	for k := range parcel_m {
 		delete(parcel_m, k) // free the map when creation is done
 	}
 
+	return cities_list, nil
+}
+
+func actions_input_and_exec(scanner *bufio.Scanner, cities_list []city.City) error {
 	num_actions, err := parse_single_number(scanner)
+	if err != nil {
+		return err
+	}
+
+	action_list, err := action.Create_actions(scanner, num_actions)
+	if err != nil {
+		return err
+	}
+	fmt.Println("City list:", cities_list) // Debug
+	fmt.Println("Actions:", action_list)   // Debug
+
+	return nil
+}
+
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+
+	cities_list, err := handle_cities_input(scanner)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 
-	action_list, err := action.Create_actions(scanner, num_actions)
+	err = actions_input_and_exec(scanner, cities_list)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -78,7 +97,4 @@ func main() {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-
-	fmt.Println("DONE", cities_list, "is the city list") // Debug
-	fmt.Println(action_list)                             // Debug
 }
