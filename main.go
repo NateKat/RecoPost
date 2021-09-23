@@ -2,6 +2,7 @@ package main
 
 import (
 	"RecoPost/city"
+	"RecoPost/parcel"
 	"bufio"
 	"errors"
 	"fmt"
@@ -42,6 +43,7 @@ func create_cities(scanner *bufio.Scanner, num_cities int) ([]city.City, error) 
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
+	var parcel_m = parcel.Parcel_m // map[string]bool
 
 	num_cities, err := parse_num_cities(scanner)
 	if err != nil {
@@ -53,6 +55,10 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
+	}
+
+	for k := range parcel_m {
+		delete(parcel_m, k) // free the map when creation is done
 	}
 
 	if scanner.Err() != nil {
