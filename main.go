@@ -1,6 +1,7 @@
 package main
 
 import (
+	"RecoPost/action"
 	"RecoPost/city"
 	"RecoPost/parcel"
 	"bufio"
@@ -61,10 +62,23 @@ func main() {
 		delete(parcel_m, k) // free the map when creation is done
 	}
 
+	num_actions, err := parse_single_number(scanner)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
+	action_list, err := action.Create_actions(scanner, num_actions)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
 	if scanner.Err() != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 
 	fmt.Println("DONE", cities_list, "is the city list") // Debug
+	fmt.Println(action_list)                             // Debug
 }
