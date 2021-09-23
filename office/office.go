@@ -49,15 +49,19 @@ func parse_office_params(line string) ([]int, error) {
 	return fields_i, nil
 }
 
-func create_parcels(scanner *bufio.Scanner, num_parcels int) ([]parcel.Parcel, error) {
+func create_parcels(scanner *bufio.Scanner, o_params []int) ([]parcel.Parcel, error) {
 	var parcels_list []parcel.Parcel
 
-	for i := 0; i < num_parcels; i++ {
+	for i := 0; i < o_params[0]; i++ {
 		p, err := parcel.New(scanner)
 		if err != nil {
 			return nil, err
 		}
-		parcels_list = append(parcels_list, *p)
+		if o_params[1] <= p.Parcel_wt() && p.Parcel_wt() <= o_params[2] {
+			parcels_list = append(parcels_list, *p)
+		} else {
+			return nil, errors.New("error: parcel weight is not within office limit")
+		}
 	}
 
 	return parcels_list, nil
@@ -71,7 +75,7 @@ func New(scanner *bufio.Scanner, office_number int) (*Office, error) {
 		return nil, err
 	}
 
-	parcels_list, err := create_parcels(scanner, o_params[0])
+	parcels_list, err := create_parcels(scanner, o_params)
 	if err != nil {
 		return nil, err
 	}
