@@ -10,21 +10,21 @@ import (
 	"strconv"
 )
 
-func parse_num_cities(scanner *bufio.Scanner) (int, error) {
+func parse_single_number(scanner *bufio.Scanner) (int, error) {
 	scanner.Scan()
 	text := scanner.Text()
 	if len(text) != 1 {
-		return 0, errors.New("error: expected number of cities")
+		return 0, errors.New("error: expected single number")
 	}
 
-	num_cities, err := strconv.Atoi(text)
+	number, err := strconv.Atoi(text)
 	if err != nil {
 		return 0, err
-	} else if num_cities < 0 {
-		return 0, errors.New("error: number of cities should be non-negative int")
+	} else if number < 0 {
+		return 0, errors.New("error: number should be non-negative int")
 	}
 
-	return num_cities, nil
+	return number, nil
 }
 
 func create_cities(scanner *bufio.Scanner, num_cities int) ([]city.City, error) {
@@ -45,7 +45,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	var parcel_m = parcel.Parcel_m // map[string]bool
 
-	num_cities, err := parse_num_cities(scanner)
+	num_cities, err := parse_single_number(scanner)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
