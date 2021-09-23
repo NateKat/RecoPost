@@ -76,3 +76,15 @@ func Move_parcels(c1, c2 City, o1, o2 int) {
 	c1.totParcels -= tot_send
 	c2.totParcels += tot_recv
 }
+
+func Max_parcels_name(cities_list []City) string {
+	var max_c City
+
+	for _, c := range cities_list {
+		if max_c.totParcels < c.totParcels {
+			max_c = c
+		}
+	}
+
+	return max_c.cityName
+}
