@@ -10,8 +10,8 @@ import (
 
 type Office struct {
 	officeName  int
-	maxParcelWt int
 	minParcelWt int
+	maxParcelWt int
 	parcels     []parcel.Parcel
 }
 
@@ -88,9 +88,9 @@ func (o Office) Tot_parcels() int {
 	return len(o.parcels)
 }
 
-func (send_office *Office) Send_to_office(recv_office Office) (int, int) {
+func (send_office *Office) Send_to_office(recv_office *Office) (int) {
 	var rejected_list []parcel.Parcel
-	var tot_send, tot_recv int
+	var tot_recv int
 
 	for _, p := range send_office.parcels {
 		if recv_office.minParcelWt <= p.Parcel_wt() && p.Parcel_wt() <= recv_office.maxParcelWt {
@@ -98,10 +98,15 @@ func (send_office *Office) Send_to_office(recv_office Office) (int, int) {
 			tot_recv += 1
 		} else {
 			rejected_list = append(rejected_list, p)
-			tot_send += 1
 		}
 	}
-	//send_office.parcels = nil
+
 	send_office.parcels = rejected_list
-	return tot_send, tot_recv
+	return tot_recv
+}
+
+func (office Office) Print_office() {
+	for _, p := range office.parcels {
+		println("\t\t", p.Parcel_name())
+	}
 }

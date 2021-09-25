@@ -4,6 +4,7 @@ import (
 	"RecoPost/office"
 	"bufio"
 	"errors"
+	"fmt"
 	"strconv"
 )
 
@@ -70,13 +71,19 @@ func New(scanner *bufio.Scanner) (*City, string, error) {
 	return &c, cityName, nil
 }
 
-func Move_parcels(c1, c2 City, o1, o2 int) {
-	tot_send, tot_recv := c1.offices[o1].Send_to_office(c2.offices[o2])
-	c1.totParcels -= tot_send
-	c2.totParcels += tot_recv
+func Move_parcels(cities_m map[string]*City, c1, c2 string, o1, o2 int) error {
+	if len(cities_m[c1].offices) <= o1 || len(cities_m[c2].offices) <= o2 {
+		return errors.New("office index doesn't exist") // out of range
+	}
+
+	tot_recv := cities_m[c1].offices[o1].Send_to_office(&cities_m[c2].offices[o2])
+	cities_m[c1].totParcels -= tot_recv
+	cities_m[c2].totParcels += tot_recv
+
+	return nil
 }
 
-func Max_parcels_name(cities_m map[string]City) string {
+func Max_parcels_name(cities_m map[string]*City) string {
 	max_t := -1
 	max_c := ""
 
@@ -90,16 +97,25 @@ func Max_parcels_name(cities_m map[string]City) string {
 	return max_c
 }
 
-func Create_cities(scanner *bufio.Scanner, num_cities int) (map[string]City, error) {
-	var cities_m = make(map[string]City)
+func Create_cities(scanner *bufio.Scanner, num_cities int) (map[string]*City, error) {
+	var cities_m = make(map[string]*City)
 
 	for i := 0; i < num_cities; i++ {
 		c, name, err := New(scanner)
 		if err != nil {
 			return nil, err
 		}
-		cities_m[name] = *c
+		cities_m[name] = c
 	}
 
 	return cities_m, nil
+}
+
+func (city City) Print_city() error {
+	for i, o := range city.offices {
+		fmt.Print("\t", i, ":\n")
+		o.Print_office()
+	}
+
+	return nil
 }

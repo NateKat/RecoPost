@@ -4,6 +4,7 @@ import (
 	"RecoPost/city"
 	"bufio"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -100,30 +101,62 @@ func Create_actions(scanner *bufio.Scanner, num_actions int) ([]Action, error) {
 	return action_list, nil
 }
 
-func (action *Action) op_one() error {
+/* Print offices and parcel names for specific city */
+func (action *Action) op_one(cities_m map[string]*city.City) error {
+	if _, ok := cities_m[action.args]; ok {
+		fmt.Print(action.args, ":\n")
+		return cities_m[action.args].Print_city()
+	} else {
+		return errors.New("error: city name doesn't exist")
+	}
+}
+
+/* Send parcels from (city, office) to different (city, office)*/
+func (action *Action) op_two(cities_m map[string]*city.City) error {
+	fields := strings.Fields(action.args)
+
+	o1, err := strconv.Atoi(fields[1])
+	if err != nil {
+		panic("Trying to execute op with illegal value")
+	}
+	o2, err := strconv.Atoi(fields[3])
+	if err != nil {
+		panic("Trying to execute op with illegal value")
+	}
+
+	if _, ok := cities_m[fields[0]]; !ok {
+		return errors.New("error: city name doesn't exist")
+	}
+	if _, ok := cities_m[fields[2]]; !ok {
+		return errors.New("error: city name doesn't exist")
+	}
+
+	return city.Move_parcels(cities_m, fields[0], fields[2], o1, o2)
+}
+
+/* Print the name of the city with the maximum number of parcels */
+func (action *Action) op_three(cities_m map[string]*city.City) error {
+	fmt.Println("Town with the most number of packages is", city.Max_parcels_name(cities_m))
 	return nil
 }
 
-func (action *Action) op_two() error {
-	return nil
-}
-
-func (action *Action) op_three() error {
-	//fmt.Println("Town with the most number of packages is ", city.Max_parcels_name())
-	return nil
-}
-
-func Execute_actions(action_list []Action, cities_m map[string]city.City) error {
+func Execute_actions(action_list []Action, cities_m map[string]*city.City) error {
 	for _, a := range action_list {
+		var err error
+
 		switch a.op {
 		case 1:
-			a.op_one()
+			err = a.op_one(cities_m)
 		case 2:
-			a.op_two()
+			err = a.op_two(cities_m)
 		case 3:
-			a.op_three()
+			err = a.op_three(cities_m)
 		default:
-			return errors.New("error: action opcode doesn't exists")
+			err = errors.New("error: action opcode doesn't exists")
+		}
+
+		if err != nil {
+			return err
 		}
 	}
 

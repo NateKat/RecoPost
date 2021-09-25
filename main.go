@@ -28,7 +28,7 @@ func parse_single_number(scanner *bufio.Scanner) (int, error) {
 	return number, nil
 }
 
-func handle_cities_input(scanner *bufio.Scanner) (map[string]city.City, error) {
+func handle_cities_input(scanner *bufio.Scanner) (map[string]*city.City, error) {
 	var parcel_m = parcel.Parcel_m // map[string]bool
 
 	num_cities, err := parse_single_number(scanner)
@@ -48,7 +48,7 @@ func handle_cities_input(scanner *bufio.Scanner) (map[string]city.City, error) {
 	return cities_m, nil
 }
 
-func actions_input_and_exec(scanner *bufio.Scanner, cities_m map[string]city.City) error {
+func actions_input_and_exec(scanner *bufio.Scanner, cities_m map[string]*city.City) error {
 	num_actions, err := parse_single_number(scanner)
 	if err != nil {
 		return err
@@ -58,8 +58,6 @@ func actions_input_and_exec(scanner *bufio.Scanner, cities_m map[string]city.Cit
 	if err != nil {
 		return err
 	}
-	fmt.Println("City map:", cities_m)   // Debug
-	fmt.Println("Actions:", action_list) // Debug
 
 	return action.Execute_actions(action_list, cities_m)
 }

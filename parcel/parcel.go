@@ -43,3 +43,7 @@ func New(scanner *bufio.Scanner) (*Parcel, error) {
 func (p Parcel) Parcel_wt() int {
 	return p.weight
 }
+
+func (p Parcel) Parcel_name() string {
+	return p.uid
+}
