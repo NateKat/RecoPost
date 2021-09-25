@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type City struct {
@@ -15,7 +16,7 @@ type City struct {
 
 func parse_city_params(scanner *bufio.Scanner) (string, int, error) {
 	scanner.Scan()
-	cityName := scanner.Text()
+	cityName := strings.Fields(scanner.Text())
 	if len(cityName) != 1 {
 		return "", 0, errors.New("error: expected city name")
 	}
@@ -33,7 +34,7 @@ func parse_city_params(scanner *bufio.Scanner) (string, int, error) {
 		return "", 0, errors.New("error: number of offices should be non-negative int")
 	}
 
-	return cityName, num_offices, nil
+	return cityName[0], num_offices, nil
 }
 
 func create_offices(scanner *bufio.Scanner, num_offices int) ([]office.Office, error) {
