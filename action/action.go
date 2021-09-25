@@ -113,7 +113,7 @@ func (action *Action) op_three() error {
 	return nil
 }
 
-func Execute_actions(action_list []Action, cities_list []city.City) error {
+func Execute_actions(action_list []Action, cities_m map[string]city.City) error {
 	for _, a := range action_list {
 		switch a.op {
 		case 1:

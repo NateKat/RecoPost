@@ -8,7 +8,6 @@ import (
 )
 
 type City struct {
-	cityName   string
 	totParcels int
 	offices    []office.Office
 }
@@ -50,25 +49,25 @@ func create_offices(scanner *bufio.Scanner, num_offices int) ([]office.Office, e
 	return offices_list, nil
 }
 
-func New(scanner *bufio.Scanner) (*City, error) {
+func New(scanner *bufio.Scanner) (*City, string, error) {
 	var tot = 0
 
 	cityName, num_offices, err := parse_city_params(scanner)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	offices_list, err := create_offices(scanner, num_offices)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	for _, o := range offices_list {
 		tot += o.Tot_parcels()
 	}
 
-	c := City{cityName, tot, offices_list}
-	return &c, nil
+	c := City{tot, offices_list}
+	return &c, cityName, nil
 }
 
 func Move_parcels(c1, c2 City, o1, o2 int) {
@@ -77,28 +76,30 @@ func Move_parcels(c1, c2 City, o1, o2 int) {
 	c2.totParcels += tot_recv
 }
 
-func Max_parcels_name(cities_list []City) string {
-	var max_c City
+func Max_parcels_name(cities_m map[string]City) string {
+	max_t := -1
+	max_c := ""
 
-	for _, c := range cities_list {
-		if max_c.totParcels < c.totParcels {
-			max_c = c
+	for name, c := range cities_m {
+		if max_t < c.totParcels {
+			max_t = c.totParcels
+			max_c = name
 		}
 	}
 
-	return max_c.cityName
+	return max_c
 }
 
-func Create_cities(scanner *bufio.Scanner, num_cities int) ([]City, error) {
-	var cities_list []City
+func Create_cities(scanner *bufio.Scanner, num_cities int) (map[string]City, error) {
+	var cities_m = make(map[string]City)
 
 	for i := 0; i < num_cities; i++ {
-		c, err := New(scanner)
+		c, name, err := New(scanner)
 		if err != nil {
 			return nil, err
 		}
-		cities_list = append(cities_list, *c)
+		cities_m[name] = *c
 	}
 
-	return cities_list, nil
+	return cities_m, nil
 }
