@@ -106,7 +106,11 @@ func Create_cities(scanner *bufio.Scanner, num_cities int) (map[string]*City, er
 		if err != nil {
 			return nil, err
 		}
-		cities_m[name] = c
+		if _, ok := cities_m[name]; ok {
+			return cities_m, errors.New("error: city name already exist")
+		} else {
+			cities_m[name] = c
+		}
 	}
 
 	return cities_m, nil
